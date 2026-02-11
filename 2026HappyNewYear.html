@@ -191,7 +191,7 @@
     <div class="stars" id="stars"></div>
     <div class="new-year-container">
         <div class="happy-new-year">2026新年快乐 🎇</div>
-        <div class="sub-title">1个亿随随便便，内贸组马年发大财</div>
+        <div class="sub-title">愿新年 胜旧年 · 岁岁常欢愉</div>
     </div>
     <div class="click-tip">点击屏幕放烟花 ✨</div>
     <canvas id="fireworks"></canvas>
@@ -362,6 +362,20 @@
             }, 16);
         }
         
+        // 批量创建开场烟花（100个）
+        function createInitFireworks() {
+            // 分批创建100个烟花，避免一次性卡顿
+            let count = 0;
+            const interval = setInterval(() => {
+                createFirework();
+                count++;
+                // 达到100个停止创建
+                if (count >= 100) {
+                    clearInterval(interval);
+                }
+            }, 30); // 每30ms创建一个，分散性能压力
+        }
+        
         // 手动触发烟花（增强效果）
         function createManualFirework(x, y) {
             const particleCount = Math.floor(random(100, 200));
@@ -408,10 +422,12 @@
             requestAnimationFrame(animate);
         }
         
-        // 启动动画
+        // 启动动画 + 开场100个烟花
         setTimeout(() => {
             animate();
-            // 调整烟花生成间隔
+            // 立即创建开场100个烟花
+            createInitFireworks();
+            // 之后恢复正常自动烟花频率
             setInterval(createFirework, random(800, 2000));
             // 随机生成更多烟花
             setInterval(() => {
